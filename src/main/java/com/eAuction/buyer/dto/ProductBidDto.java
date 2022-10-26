@@ -1,22 +1,20 @@
-package com.eAuction.buyer.model;
+package com.eAuction.buyer.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
-
 @Data
-@Entity
-@Table(name = "Product_Bid")
 @NoArgsConstructor
-public class ProductBid {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class ProductBidDto {
+    private String firstName;
+    private String lastName;
+    private String address;
+    private String city;
+    private String state;
+    private String pin;
     private String phone;
     private String email;
     private Long productId;
     private BigDecimal bidAmount;
-
 }

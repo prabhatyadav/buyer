@@ -1,24 +1,45 @@
 package com.eAuction.buyer.controller;
 
+import com.eAuction.buyer.dto.ProductBidDto;
+import com.eAuction.buyer.exception.InvalidProductDetailException;
 import com.eAuction.buyer.model.ProductBid;
+import com.eAuction.buyer.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/buyer")
 public class BidController {
 
-    @RequestMapping(method = RequestMethod.POST , value="/place-bid" )
-    public void  placeBid(@RequestBody ProductBid productBid){
+    @Autowired
+    private ProductService productService;
+
+    @RequestMapping(method = RequestMethod.POST, value = "/place-bid")
+    public void placeBid(@RequestBody ProductBidDto productBidDto) {
+
+        if(productBidDto !=null){
+            Long productId = productBidDto.getProductId();
+             if(productService.isProductIdValid(productId)){
+
+             }
+
+
+
+        }else{
+
+        }
 
     }
 
-    @RequestMapping(method = RequestMethod.PUT , value="/update-bid/{productId}/{buyerEmailId}/{newBidAmount}" )
-    public void updateBid(@PathVariable("productId") String productId ,
-                          @PathVariable("buyerEmailId") String buyerEmailId ,
-                          @PathVariable("newBidAmount") double newBidAmount ){
+    @RequestMapping(method = RequestMethod.PUT, value = "/update-bid/{productId}/{buyerEmailId}/{newBidAmount}")
+    public void updateBid(@PathVariable("productId") String productId,
+                          @PathVariable("buyerEmailId") String buyerEmailId,
+                          @PathVariable("newBidAmount") double newBidAmount) {
 
     }
-     @GetMapping("/demo")
-    public String demo(){
+
+    @GetMapping("/demo")
+    public String demo() {
         return "Hello This is the  ";
-     }
+    }
 }

@@ -22,6 +22,13 @@ public class BidController {
              if(productService.isProductIdValid(productId)){
 
              }
+             // bid allowed end date should be less than current date
+
+
+            // check the user already bid for the product or not
+
+
+            //if all okay then place the bid
 
 
 
@@ -35,6 +42,9 @@ public class BidController {
     public void updateBid(@PathVariable("productId") String productId,
                           @PathVariable("buyerEmailId") String buyerEmailId,
                           @PathVariable("newBidAmount") double newBidAmount) {
+
+
+        // get the bid- entry form the productbid table and update that with  new amount and updated date.
 
     }
 

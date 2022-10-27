@@ -1,8 +1,10 @@
 package com.eAuction.buyer.controller;
 
 import com.eAuction.buyer.dto.ProductBidDto;
+import com.eAuction.buyer.exception.AlreadyExistingBidException;
 import com.eAuction.buyer.exception.InvalidProductDetailException;
 import com.eAuction.buyer.model.ProductBid;
+import com.eAuction.buyer.service.BidService;
 import com.eAuction.buyer.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,15 +16,23 @@ public class BidController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private BidService bidService;
+
     @RequestMapping(method = RequestMethod.POST, value = "/place-bid")
     public void placeBid(@RequestBody ProductBidDto productBidDto) {
 
         if(productBidDto !=null){
             Long productId = productBidDto.getProductId();
-             if(productService.isProductIdValid(productId)){
-
+                     if(productService.isProductIdValid(productId)){
+                         String email = productBidDto.getEmail();
+                                if(!bidService.isBidAlreadyPlacedByBidder(email,productId)){
+                                    bidService.placeBidForProduct(productBidDto);
+                                }else{
+                                    throw new AlreadyExistingBidException("Bid is already raised for this product by user");
+                                }
              }
-             // bid allowed end date should be less than current date
+
 
 
             // check the user already bid for the product or not

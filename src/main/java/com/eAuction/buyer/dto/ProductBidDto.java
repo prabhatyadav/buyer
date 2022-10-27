@@ -23,7 +23,6 @@ public class ProductBidDto {
     private String state;
     private String pin;
 
-
     @NotNull
     @Size(min=10, max=10 , message="mobile number should be 10 digit only number")
     @Pattern(regexp = "^(\\+91[\\-\\s]?)?[0]?(91)?[789]\\d{9}$")

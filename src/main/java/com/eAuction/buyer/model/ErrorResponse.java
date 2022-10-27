@@ -16,4 +16,5 @@ public class ErrorResponse {
         super();
         this.message = message;
     }
+
 }

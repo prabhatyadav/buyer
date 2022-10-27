@@ -2,6 +2,7 @@ package com.eAuction.buyer.service;
 
 import com.eAuction.buyer.dto.ProductBidDto;
 import com.eAuction.buyer.exception.AlreadyExistingBidException;
+import com.eAuction.buyer.exception.InvalidProductBidDetailException;
 import com.eAuction.buyer.model.ProductBid;
 import com.eAuction.buyer.repository.ProductBidRepository;
 import org.modelmapper.ModelMapper;
@@ -31,8 +32,21 @@ public class BidService {
     }
 
     public ProductBid placeBidForProduct(ProductBidDto productBidDto) {
-        ProductBid productBid = modelMapper.map(productBidDto, ProductBid.class);
-        ProductBid foundProductBid = productBidRepository.save(productBid);
-        return foundProductBid;
+        if (productBidDto != null) {
+            ProductBid productBid = modelMapper.map(productBidDto, ProductBid.class);
+            ProductBid savedProductBid = productBidRepository.save(productBid);
+            return savedProductBid;
+        } else {
+            throw new InvalidProductBidDetailException("Product Bid  is Null");
+        }
+    }
+
+    public ProductBid placeBidForProduct(ProductBid productBid) {
+        if (productBid != null) {
+            ProductBid savedProductBid = productBidRepository.save(productBid);
+            return savedProductBid;
+        } else {
+            throw new InvalidProductBidDetailException("ProductBid  is Null");
+        }
     }
 }

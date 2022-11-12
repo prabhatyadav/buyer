@@ -9,6 +9,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class BidService {
 
@@ -47,6 +50,17 @@ public class BidService {
             return savedProductBid;
         } else {
             throw new InvalidProductBidDetailException("ProductBid  is Null");
+        }
+    }
+
+    public List<ProductBidDto> getAllProductBid(Long productId) {
+        List<ProductBid> productBids = productBidRepository.findByProductId(productId);
+        if(productBids==null || productBids.isEmpty()){
+            return null;
+        }else{
+            List<ProductBidDto> ProductBidDtoList = new ArrayList<>(productBids.size());
+            modelMapper.map(productBids, ProductBidDtoList);
+            return ProductBidDtoList;
         }
     }
 }

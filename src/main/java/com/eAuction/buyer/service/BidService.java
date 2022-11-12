@@ -5,14 +5,17 @@ import com.eAuction.buyer.exception.AlreadyExistingBidException;
 import com.eAuction.buyer.exception.InvalidProductBidDetailException;
 import com.eAuction.buyer.model.ProductBid;
 import com.eAuction.buyer.repository.ProductBidRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class BidService {
 
     @Autowired
@@ -53,14 +56,16 @@ public class BidService {
         }
     }
 
-    public List<ProductBidDto> getAllProductBid(Long productId) {
+    public List<ProductBid> getAllProductBid(Long productId) {
         List<ProductBid> productBids = productBidRepository.findByProductId(productId);
-        if(productBids==null || productBids.isEmpty()){
+        productBids.forEach((productBid) -> log.info(productBid.toString()));
+        if(productBids == null || productBids.isEmpty()){
             return null;
         }else{
-            List<ProductBidDto> ProductBidDtoList = new ArrayList<>(productBids.size());
-            modelMapper.map(productBids, ProductBidDtoList);
-            return ProductBidDtoList;
+            //List<ProductBidDto> ProductBidDtoList = new ArrayList<>(productBids.size());
+            //List<ProductBidDto> ProductBidDtoList= productBids.stream().map((productBid) ->{ return modelMapper.map(productBids, ProductBidDto.class);}).collect(Collectors.toList());
+
+            return productBids;
         }
     }
 }

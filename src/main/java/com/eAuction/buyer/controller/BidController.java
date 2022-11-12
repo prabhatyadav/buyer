@@ -45,8 +45,8 @@ public class BidController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/bids/{productId}")
-    public ResponseEntity<List<ProductBidDto>> placeBid(@PathVariable @NotNull Long productId) {
-        List<ProductBidDto> productBids = null;
+    public ResponseEntity<List<ProductBid>> placeBid(@PathVariable @NotNull Long productId) {
+        List<ProductBid> productBids = null;
         HttpHeaders respHeaders = new HttpHeaders();
         respHeaders.add("Access-Control-Allow-Origin", "*");
         if (productId != null) {
@@ -63,7 +63,7 @@ public class BidController {
         HttpHeaders respHeaders = new HttpHeaders();
         respHeaders.add("Access-Control-Allow-Origin", "*");
 
-        //1. get the bid- entry form the productbid table
+        //1. get the bid-entry form the productbid table
         ProductBid foundProductBid = bidService.getProductBid(buyerEmailId, productId);
 
         //2. and update that with  new amount and updated date.

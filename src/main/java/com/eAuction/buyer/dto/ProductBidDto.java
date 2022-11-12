@@ -2,6 +2,7 @@ package com.eAuction.buyer.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -9,6 +10,7 @@ import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
+@ToString
 public class ProductBidDto {
     @NotNull
     @Size(min=5, max=30, message="First name should be 5 to 30 character")

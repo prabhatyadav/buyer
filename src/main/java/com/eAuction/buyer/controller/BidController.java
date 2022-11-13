@@ -1,10 +1,12 @@
 package com.eAuction.buyer.controller;
 
 import com.eAuction.buyer.dto.ProductBidDto;
+import com.eAuction.buyer.dto.ProductBidDtoTest;
 import com.eAuction.buyer.exception.InvalidProductBidDetailException;
 import com.eAuction.buyer.model.ProductBid;
 import com.eAuction.buyer.service.BidService;
 import com.eAuction.buyer.service.ProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/e-auction/api/v1/buyer")
+@Slf4j
 public class BidController {
 
     @Autowired
@@ -26,12 +29,17 @@ public class BidController {
     private BidService bidService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/place-bid")
-    public ResponseEntity<ProductBid> placeBid(@RequestBody @NotNull ProductBidDto productBidDto) {
+    public ResponseEntity<ProductBid> placeBid(@RequestBody ProductBidDto productBidDto) {
         HttpHeaders respHeaders = new HttpHeaders();
         respHeaders.add("Access-Control-Allow-Origin", "*");
+        respHeaders.add("Access-Control-Allow-Credentials", "true");
+        respHeaders.add("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+        respHeaders.add("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+        log.info("productBidDto : "+ productBidDto);
 
         if (productBidDto != null) {
             Long productId = productBidDto.getProductId();
+            log.info("productId : "+ productId);
             if (productService.isProductIdValid(productId)) {
                 String email = productBidDto.getEmail();
                 if (!bidService.isBidAlreadyPlacedByBidder(email, productId)) {
@@ -41,7 +49,7 @@ public class BidController {
 
             }
         }
-        return new ResponseEntity<ProductBid>(HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<ProductBid>(null,respHeaders,HttpStatus.NOT_ACCEPTABLE);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/bids/{productId}")
@@ -49,6 +57,9 @@ public class BidController {
         List<ProductBid> productBids = null;
         HttpHeaders respHeaders = new HttpHeaders();
         respHeaders.add("Access-Control-Allow-Origin", "*");
+        respHeaders.add("Access-Control-Allow-Credentials", "true");
+        respHeaders.add("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+        respHeaders.add("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
         if (productId != null) {
             productBids = bidService.getAllProductBid(productId);
         }
@@ -56,7 +67,7 @@ public class BidController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/update-bid/{productId}/{buyerEmailId}/{newBidAmount}")
-    public ProductBid updateBid(@PathVariable("productId") @NotNull Long productId,
+    public ResponseEntity<ProductBid> updateBid(@PathVariable("productId") @NotNull Long productId,
                                 @PathVariable("buyerEmailId") @NotNull String buyerEmailId,
                                 @PathVariable("newBidAmount") @NotNull BigDecimal newBidAmount) {
 
@@ -70,7 +81,7 @@ public class BidController {
         if (foundProductBid != null) {
             foundProductBid.setBidAmount(newBidAmount);
             ProductBid updatedProductBid = bidService.placeBidForProduct(foundProductBid);
-            return updatedProductBid;
+            return new ResponseEntity(updatedProductBid,respHeaders,HttpStatus.OK);
         } else {
             throw new InvalidProductBidDetailException(" No Bid is placed for the Product code : " + productId + " By user : " + buyerEmailId);
         }
@@ -81,5 +92,18 @@ public class BidController {
     @GetMapping("/demo")
     public String demo() {
         return "Hello This is the  ";
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/place-bid-test")
+    public ResponseEntity<ProductBid> placeBidTest( @RequestBody ProductBidDtoTest productBidDtoTest) {
+        HttpHeaders respHeaders = new HttpHeaders();
+        respHeaders.add("Access-Control-Allow-Origin", "*");
+        respHeaders.add("Access-Control-Allow-Credentials", "true");
+        respHeaders.add("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+        respHeaders.add("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+        log.info("productBidDtoTest : ");
+
+
+        return new ResponseEntity<ProductBid>(new ProductBid(),respHeaders,HttpStatus.OK);
     }
 }

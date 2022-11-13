@@ -26,9 +26,10 @@ public class ProductService {
         String errorMessage = null;
         if (productId != null) {
             //1. check the productId present in database or  not.
-
+            log.info("isProductIdValid");
             ResponseEntity<ProductResponse> responseEntity = restTemplate.exchange(productApiURL + "/" + productId, HttpMethod.GET, null, ProductResponse.class);
-
+            log.info(responseEntity.toString());
+            log.info(responseEntity.getBody().toString());
             if (responseEntity == null || responseEntity.getBody() == null) {
                 throw new InvalidProductDetailException("Product Not Found with Product Id : " + productId);
             } else {

@@ -35,21 +35,21 @@ public class BidController {
         respHeaders.add("Access-Control-Allow-Credentials", "true");
         respHeaders.add("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
         respHeaders.add("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-        log.info("productBidDto : "+ productBidDto);
+        log.info("productBidDto : " + productBidDto);
 
         if (productBidDto != null) {
             Long productId = productBidDto.getProductId();
-            log.info("productId : "+ productId);
+            log.info("productId : " + productId);
             if (productService.isProductIdValid(productId)) {
                 String email = productBidDto.getEmail();
                 if (!bidService.isBidAlreadyPlacedByBidder(email, productId)) {
-                    ProductBid newProductBid = bidService.placeBidForProduct(productBidDto);
-                    return new ResponseEntity<ProductBid>(newProductBid, respHeaders,HttpStatus.OK);
+                    ProductBid newProductBid = bidService.placeBidForProductDto(productBidDto);
+                    return new ResponseEntity<ProductBid>(newProductBid, respHeaders, HttpStatus.OK);
                 }
 
             }
         }
-        return new ResponseEntity<ProductBid>(null,respHeaders,HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<ProductBid>(null, respHeaders, HttpStatus.NOT_ACCEPTABLE);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/bids/{productId}")
@@ -63,25 +63,25 @@ public class BidController {
         if (productId != null) {
             productBids = bidService.getAllProductBid(productId);
         }
-        return ResponseEntity.ok().headers(respHeaders).body( productBids);
+        return ResponseEntity.ok().headers(respHeaders).body(productBids);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/update-bid/{productId}/{buyerEmailId}/{newBidAmount}")
     public ResponseEntity<ProductBid> updateBid(@PathVariable("productId") @NotNull Long productId,
-                                @PathVariable("buyerEmailId") @NotNull String buyerEmailId,
-                                @PathVariable("newBidAmount") @NotNull BigDecimal newBidAmount) {
+                                                @PathVariable("buyerEmailId") @NotNull String buyerEmailId,
+                                                @PathVariable("newBidAmount") @NotNull BigDecimal newBidAmount) {
 
         HttpHeaders respHeaders = new HttpHeaders();
         respHeaders.add("Access-Control-Allow-Origin", "*");
 
-        //1. get the bid-entry form the productbid table
+        //1. get the bid-entry form the product bid table
         ProductBid foundProductBid = bidService.getProductBid(buyerEmailId, productId);
 
         //2. and update that with  new amount and updated date.
         if (foundProductBid != null) {
             foundProductBid.setBidAmount(newBidAmount);
             ProductBid updatedProductBid = bidService.placeBidForProduct(foundProductBid);
-            return new ResponseEntity(updatedProductBid,respHeaders,HttpStatus.OK);
+            return new ResponseEntity(updatedProductBid, respHeaders, HttpStatus.OK);
         } else {
             throw new InvalidProductBidDetailException(" No Bid is placed for the Product code : " + productId + " By user : " + buyerEmailId);
         }
@@ -95,7 +95,7 @@ public class BidController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/place-bid-test")
-    public ResponseEntity<ProductBid> placeBidTest( @RequestBody ProductBidDtoTest productBidDtoTest) {
+    public ResponseEntity<ProductBid> placeBidTest(@RequestBody ProductBidDtoTest productBidDtoTest) {
         HttpHeaders respHeaders = new HttpHeaders();
         respHeaders.add("Access-Control-Allow-Origin", "*");
         respHeaders.add("Access-Control-Allow-Credentials", "true");
@@ -104,6 +104,6 @@ public class BidController {
         log.info("productBidDtoTest : ");
 
 
-        return new ResponseEntity<ProductBid>(new ProductBid(),respHeaders,HttpStatus.OK);
+        return new ResponseEntity<ProductBid>(new ProductBid(), respHeaders, HttpStatus.OK);
     }
 }

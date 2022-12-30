@@ -36,7 +36,7 @@ public class BidService {
         }
     }
 
-    public ProductBid placeBidForProduct(ProductBidDto productBidDto) {
+    public ProductBid placeBidForProductDto(ProductBidDto productBidDto) {
         if (productBidDto != null) {
             ProductBid productBid = modelMapper.map(productBidDto, ProductBid.class);
             ProductBid savedProductBid = productBidRepository.save(productBid);
@@ -56,15 +56,16 @@ public class BidService {
     }
 
     public List<ProductBidDto> getAllProductBid(Long productId) {
+        List<ProductBidDto> productBidDtoList = new ArrayList<>(0);
         List<ProductBid> productBids = productBidRepository.findByProductId(productId);
-        productBids.forEach((productBid) -> log.info(productBid.toString()));
-        if(productBids == null || productBids.isEmpty()){
-            return null;
-        }else{
-            //List<ProductBidDto> ProductBidDtoList = new ArrayList<>(productBids.size());
-            List<ProductBidDto> ProductBidDtoList= productBids.stream().map((productBid) ->{ return modelMapper.map(productBids, ProductBidDto.class);}).collect(Collectors.toList());
 
-            return ProductBidDtoList;
+        if (productBids == null || productBids.isEmpty()) {
+            return productBidDtoList;
+        } else {
+            productBids.forEach((productBid) -> log.info(productBid.toString()));
+            productBidDtoList = productBids.stream().map((productBid) -> modelMapper.map(productBid, ProductBidDto.class)).collect(Collectors.toList());
+
         }
+        return productBidDtoList;
     }
 }

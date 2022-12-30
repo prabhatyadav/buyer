@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -34,5 +35,6 @@ public class ProductBidDto {
     private String email;
 
     private Long productId;
+    @Min(1)
     private BigDecimal bidAmount;
 }

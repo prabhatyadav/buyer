@@ -39,8 +39,9 @@ public class BidController {
 
         if (productBidDto != null) {
             Long productId = productBidDto.getProductId();
+            double productBidAmount = productBidDto.getBidAmount().doubleValue();
             log.info("productId : " + productId);
-            if (productService.isProductIdValid(productId)) {
+            if (productService.isProductBidIsValid(productId, productBidAmount)) {
                 String email = productBidDto.getEmail();
                 if (!bidService.isBidAlreadyPlacedByBidder(email, productId)) {
                     ProductBid newProductBid = bidService.placeBidForProductDto(productBidDto);

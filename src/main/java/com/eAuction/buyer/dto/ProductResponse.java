@@ -3,8 +3,6 @@ package com.eAuction.buyer.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 @Data
@@ -14,6 +12,7 @@ public class ProductResponse {
     private String name;
     private LocalDateTime bidEndDate;
     private LocalDateTime bidStartDate;
-    private  Boolean isDeleted;
+    private Boolean isDeleted;
+    private double startingPrice;
 
 }

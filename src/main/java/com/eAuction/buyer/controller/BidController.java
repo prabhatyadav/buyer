@@ -53,8 +53,8 @@ public class BidController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/bids/{productId}")
-    public ResponseEntity<List<ProductBid>> placeBid(@PathVariable @NotNull Long productId) {
-        List<ProductBid> productBids = null;
+    public ResponseEntity<List<ProductBidDto>> getAllBid(@PathVariable @NotNull Long productId) {
+        List<ProductBidDto> productBids = null;
         HttpHeaders respHeaders = new HttpHeaders();
         respHeaders.add("Access-Control-Allow-Origin", "*");
         respHeaders.add("Access-Control-Allow-Credentials", "true");

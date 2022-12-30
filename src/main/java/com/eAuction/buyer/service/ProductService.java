@@ -2,13 +2,12 @@ package com.eAuction.buyer.service;
 
 import com.eAuction.buyer.dto.ProductResponse;
 import com.eAuction.buyer.exception.InvalidProductDetailException;
+import com.eAuction.buyer.feignclient.SellerFeignClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 
@@ -16,20 +15,21 @@ import java.time.LocalDateTime;
 @Slf4j
 public class ProductService {
 
-    @Autowired(required = true)
-    RestTemplate restTemplate;
-
     @Value("${product.api.url}")
     String productApiURL;
+
+    @Autowired
+    SellerFeignClient sellerFeignClient;
 
     public Boolean isProductIdValid(Long productId) {
         String errorMessage = null;
         if (productId != null) {
             //1. check the productId present in database or  not.
-            log.info("isProductIdValid");
-            ResponseEntity<ProductResponse> responseEntity = restTemplate.exchange(productApiURL + "/" + productId, HttpMethod.GET, null, ProductResponse.class);
-            log.info(responseEntity.toString());
-            log.info(responseEntity.getBody().toString());
+            //RestTemplate
+            //ResponseEntity<ProductResponse> responseEntity = restTemplate.exchange(productApiURL + "/" + productId, HttpMethod.GET, null, ProductResponse.class);
+
+            //feign client
+            ResponseEntity<ProductResponse> responseEntity = sellerFeignClient.getProductByProductId(productId);
             if (responseEntity == null || responseEntity.getBody() == null) {
                 throw new InvalidProductDetailException("Product Not Found with Product Id : " + productId);
             } else {

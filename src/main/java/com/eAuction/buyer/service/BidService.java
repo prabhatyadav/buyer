@@ -22,16 +22,15 @@ public class BidService {
     private ProductBidRepository productBidRepository;
 
     @Autowired
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
     public ProductBid getProductBid(String email, Long productId) {
-        ProductBid foundProductBid = productBidRepository.findByEmailAndProductId(email, productId);
-        return foundProductBid;
+        return productBidRepository.findByEmailAndProductId(email, productId);
     }
 
     public Boolean isBidAlreadyPlacedByBidder(String email, Long productId) {
         if (this.getProductBid(email, productId) != null) {
-            throw new AlreadyExistingBidException("Already Bid is done for ProductId : " + productId + "By User :" + email);
+            throw new AlreadyExistingBidException("Already Bid is done for ProductId : " + productId + " By User : " + email);
         } else {
             return false;
         }
@@ -56,16 +55,16 @@ public class BidService {
         }
     }
 
-    public List<ProductBid> getAllProductBid(Long productId) {
+    public List<ProductBidDto> getAllProductBid(Long productId) {
         List<ProductBid> productBids = productBidRepository.findByProductId(productId);
         productBids.forEach((productBid) -> log.info(productBid.toString()));
         if(productBids == null || productBids.isEmpty()){
             return null;
         }else{
             //List<ProductBidDto> ProductBidDtoList = new ArrayList<>(productBids.size());
-            //List<ProductBidDto> ProductBidDtoList= productBids.stream().map((productBid) ->{ return modelMapper.map(productBids, ProductBidDto.class);}).collect(Collectors.toList());
+            List<ProductBidDto> ProductBidDtoList= productBids.stream().map((productBid) ->{ return modelMapper.map(productBids, ProductBidDto.class);}).collect(Collectors.toList());
 
-            return productBids;
+            return ProductBidDtoList;
         }
     }
 }
